@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+
+<h:body>
+
+    <div class="myPage">
+    <div id="header">
+        <ui:insert name="header">
+            <ui:include src="headerLayout.xhtml" />
+        </ui:insert>
+    </div>
+
+    <p:layout>
+        <p:layoutUnit id="left" position="west" minSize="368">
+            <p:accordionPanel>
+            <p:tab title="Date Filter" titleStyle="border: 0;">
+                <br />
+                <p:calendar mode="inline" navigator="none"/>
+                <br />
+                <p:button value="Apply"/>
+            </p:tab>
+            </p:accordionPanel>
+        </p:layoutUnit>
+        <p:layoutUnit position="center" style="border: 0 !important; overflow: hidden !important;">
+            <div id="content">
+                <ui:insert name="mainContent">
+                    <ui:include src="contentLayout.xhtml"/>
+                </ui:insert>
+            </div>
+        </p:layoutUnit>
+        <p:layoutUnit id="right" position="east" size="300" minSize="300">
+            <p:panel header="Sentiment Aspects" style="border: 0;">
+                <p:tagCloud model="#{aspectCloudBean.model}"/>
+            </p:panel>
+        </p:layoutUnit>
+
+    </p:layout>
+
+    </div>
+    <div id="footer">
+        <ui:insert name="footer">
+            <ui:include src="footerLayout.xhtml"/>
+        </ui:insert>
+    </div>
+</h:body>
+</html>
