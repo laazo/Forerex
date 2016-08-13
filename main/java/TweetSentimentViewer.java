@@ -1,5 +1,6 @@
 import model.Tweet;
 import sentiment.analysis.SentimentAnalyser;
+import sentiment.extraction.ExchangeRateExtractor;
 import sentiment.extraction.TweetExtractor;
 import twitter4j.Status;
 
@@ -22,7 +23,7 @@ public class TweetSentimentViewer {
     }
 
     private void createTweetSentimentModel() {
-        String topic = "Bafana";
+        String topic = "#TheRand";
         tweetExtractor = new TweetExtractor();
         tweets = new ArrayList<>();
         SentimentAnalyser.initialisePipeline();
@@ -32,6 +33,10 @@ public class TweetSentimentViewer {
             tempTweet = new Tweet(tweet.getText(), SentimentAnalyser.classifySentiment(tweet.getText()));
             tweets.add(tempTweet);
         }
+
+        tweets.add(new Tweet("R" + new ExchangeRateExtractor().getRandDollar(), 5));
+        tweets.add(new Tweet("R" + new ExchangeRateExtractor().getRandEuro(), 5));
+        tweets.add(new Tweet("R" + new ExchangeRateExtractor().getRandPound(), 5));
     }
 
     public List<Tweet> getTweets() {
