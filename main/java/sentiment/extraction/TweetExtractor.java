@@ -46,7 +46,8 @@ public class TweetExtractor {
         query = new Query(toSearch + " -filter:links -filter:retweets -filter:replies -filter:images");
         query.setLocale("en");
         query.setLang("en");
-        query.setCount(10);
+        query.setGeoCode(new GeoLocation(-26.270760, 28.112268), 1000, Query.KILOMETERS);
+        query.setCount(20);
     }
     /***************************************************************************************
      *    Title: Day 20: Stanford CoreNLP — Performing Sentiment Analysis of Twitter using Java

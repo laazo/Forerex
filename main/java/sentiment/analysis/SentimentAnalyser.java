@@ -20,9 +20,11 @@ public class SentimentAnalyser {
     }
 
     public static int classifySentiment(String tweet) {
-        int sentimentScore = 0, longest = 0;
+        int sentimentScore = 0;
 
         if(tweet != null && tweet.length() > 0){
+            int longest = 0;
+
            Annotation annotation = pipeline.process(tweet);
             for(CoreMap sentence: annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
                 Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
@@ -34,7 +36,7 @@ public class SentimentAnalyser {
                 }
             }
         }
-
+        // range is [0, 4]
         return sentimentScore;
     }
     /***************************************************************************************

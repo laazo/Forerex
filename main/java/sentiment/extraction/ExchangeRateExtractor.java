@@ -38,7 +38,7 @@ public class ExchangeRateExtractor {
     }
 
     public double getRandDollar() {
-        return randDollar;
+        return Double.parseDouble(String.format("%.2f", randDollar));
     }
 
     public void setRandDollar(double randDollar) {
@@ -46,7 +46,7 @@ public class ExchangeRateExtractor {
     }
 
     public double getRandEuro() {
-        return randEuro;
+        return Double.parseDouble(String.format("%.2f", randEuro));
     }
 
     public void setRandEuro(double randEuro) {
@@ -54,7 +54,7 @@ public class ExchangeRateExtractor {
     }
 
     public double getRandPound() {
-        return randPound;
+        return Double.parseDouble(String.format("%.2f", randPound));
     }
 
     public void setRandPound(double randPound) {

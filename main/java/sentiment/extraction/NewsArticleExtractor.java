@@ -9,6 +9,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by azola.ndamase on 12-Aug-16.
@@ -16,32 +18,37 @@ import java.util.List;
 public class NewsArticleExtractor {
 
     private static final String WEBHOSE_API_KEY = "e9ab4f02-6c24-4ea8-a25d-d5c68f51274f";
+    private static final String SEARCH_QUERY = "&format=json&q=thread.title%3A(rand)%20language%3A(english)%20thread.country%3AZA%20(site_type%3Anews)";
+    private static final String WEBHOSE_URI = "http://webhose.io/search?token=";
+    private static final int NUMBER_OF_RESULTS = 10;
+
     private List<NewsArticle> newsArticles;
+
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     public void retrieveNewsArticles() {
         Client webhoseClient = ClientBuilder.newClient();
 
-        String searchQuery = "&format=json&q=the%20rand";
-        String jsonResult =   webhoseClient.target("http://webhose.io/search?token="+ WEBHOSE_API_KEY + searchQuery)
+        String jsonResult =   webhoseClient.target(WEBHOSE_URI + WEBHOSE_API_KEY + SEARCH_QUERY)
                 .request(MediaType.APPLICATION_JSON).get(String.class);
+
         JSONObject jsonObject = new JSONObject(jsonResult);
-        JSONArray postArray = jsonObject.getJSONArray("thread");
-        System.out.print(postArray.length()+ "length here");
+        JSONArray postArray = jsonObject.getJSONArray("posts");
+
         NewsArticle tempNewsArticle = new NewsArticle();
         newsArticles = new ArrayList<>();
 
-        for(int i = 0; i < postArray.length(); i++) {
+        for(int i = 0; i < NUMBER_OF_RESULTS; i++) {
 
+            JSONObject threads = postArray.getJSONObject(i).getJSONObject("thread");
             JSONObject articles = postArray.getJSONObject(i);
-            String source = articles.getString("site");
+            String source = threads.getString("site");
             String content = articles.getString("text");
             tempNewsArticle.setSource(source);
             tempNewsArticle.setContent(content);
             tempNewsArticle.setScore(0);
             newsArticles.add(tempNewsArticle);
-
         }
-
     }
 
     public List<NewsArticle> getNewsArticles() {

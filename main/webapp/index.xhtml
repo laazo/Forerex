@@ -12,9 +12,7 @@
         <ui:define name="mainContent">
             <h3>Dashboard</h3>
             <h:form id="chartForm">
-                <!--<p:poll interval="5" update="forecastChart"/>
-                <p:chart id="forecastChart" type="line" model="#{forecastChart.lineModel}" style="height:300px;"/>-->
-                <p:dataTable var="tweetVar" value="#{tweetSentimentViewer.tweets}" rows="15">
+                <p:dataTable var="tweetVar" value="#{sentimentService.tweets}" rows="15">
                 <p:column headerText="Tweet">
                     <h:outputText value="#{tweetVar.tweet}" />
                 </p:column>
@@ -23,7 +21,6 @@
                     <h:outputText value="#{tweetVar.score}" />
                 </p:column>
                 </p:dataTable>
-
             </h:form>
         </ui:define>
 
