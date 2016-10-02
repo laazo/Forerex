@@ -19,13 +19,14 @@ public class SentimentAnalyser {
         pipeline = new StanfordCoreNLP("Forerex.properties");
     }
 
-    public static int classifySentiment(String tweet) {
+    public static int classifySentiment(String sentimentText) {
         int sentimentScore = 0;
 
-        if(tweet != null && tweet.length() > 0){
+        if(sentimentText != null && sentimentText.length() > 0){
             int longest = 0;
 
-           Annotation annotation = pipeline.process(tweet);
+            Annotation annotation = pipeline.process(sentimentText);
+
             for(CoreMap sentence: annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
                 Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
                 int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
@@ -47,4 +48,16 @@ public class SentimentAnalyser {
      *    Availability: http://rahular.com/twitter-sentiment-analysis/
      *
      ***************************************************************************************/
+    public static int aggregateNewsArticleScore(String[] sentences) {
+        int aggregateScore = 0;
+        for(int i = 0; i < sentences.length; i++) {
+            aggregateScore  += classifySentiment(sentences[i]);
+        }
+        return aggregateScore / sentences.length;
+    }
+
+    public static String getSentimentValue(int sentimentScore) {
+        String [] results = {"Very Negative", "Negative", "Neutral", "Positive", "Very Positive"};
+        return results[sentimentScore];
+    }
 }
