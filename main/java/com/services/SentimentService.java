@@ -13,7 +13,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,17 +26,19 @@ public class SentimentService {
     private List<Tweet> tweets;
     private List<NewsArticle> newsArticles;
     private TweetExtractor tweetExtractor;
+    private NewsArticleExtractor newsArticleExtractor;
+
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     @PostConstruct
     public void init() {
-        SentimentAnalyser.initialisePipeline();
+       /* SentimentAnalyser.initialisePipeline();*/
         createTweetSentimentModel();
         createNewsArticlesSentimentModel();
     }
 
     private void createTweetSentimentModel() {
-        String topic = "ZARUSD";
+        String topic = "The Rand";
         tweetExtractor = new TweetExtractor();
         tweets = new ArrayList<>();
         tweetExtractor.retrieveTwitterSentiments(topic);
@@ -49,22 +50,14 @@ public class SentimentService {
     }
 
     private void createNewsArticlesSentimentModel() {
-        NewsArticleExtractor newsArticleExtractor = new NewsArticleExtractor();
         newsArticles = new ArrayList<>();
+        newsArticleExtractor = new NewsArticleExtractor();
         newsArticleExtractor.retrieveNewsArticles();
         NewsArticle tempArticle;
-        String[] sentences;
 
         for(NewsArticle newsArticle : newsArticleExtractor.getNewsArticles()) {
-            tempArticle = new NewsArticle();
-            tempArticle.setSource(newsArticle.getSource());
-            tempArticle.setContent(newsArticle.getContent());
-
-            sentences = newsArticle.getContent().split("\\.\\s\\n");
-
-            tempArticle.setScore(SentimentAnalyser.aggregateNewsArticleScore(sentences));
-            logger.log(Level.INFO, tempArticle.getScore() + "");
-            newsArticles.add(newsArticle);
+            tempArticle = new NewsArticle(newsArticle.getSource(), newsArticle.getContent(), newsArticle.getScore());
+            newsArticles.add(tempArticle);
         }
     }
 

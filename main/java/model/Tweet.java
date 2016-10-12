@@ -1,25 +1,18 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 /**
  * Created by azola.ndamase on 04-Jun-16.
  */
-@Entity
+
 public class Tweet {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String tweet;
-    private int score;
+    private String score;
 
     public Tweet() {}
 
-    public Tweet(String tweet, int score) {
+    public Tweet(String tweet, String score) {
         this.tweet = tweet;
         this.score = score;
     }
@@ -32,7 +25,7 @@ public class Tweet {
         this.tweet = tweet;
     }
 
-    public void setScore(int score) {
+    public void setScore(String score) {
         this.score = score;
     }
 
@@ -40,7 +33,7 @@ public class Tweet {
         return tweet;
     }
 
-    public int getScore() {
+    public String getScore() {
         return score;
     }
 }

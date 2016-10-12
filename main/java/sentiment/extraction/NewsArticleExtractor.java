@@ -3,6 +3,7 @@ package sentiment.extraction;
 import model.NewsArticle;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sentiment.analysis.SentimentAnalyser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -35,7 +36,7 @@ public class NewsArticleExtractor {
         JSONObject jsonObject = new JSONObject(jsonResult);
         JSONArray postArray = jsonObject.getJSONArray("posts");
 
-        NewsArticle tempNewsArticle = new NewsArticle();
+        NewsArticle tempNewsArticle;
         newsArticles = new ArrayList<>();
 
         for(int i = 0; i < NUMBER_OF_RESULTS; i++) {
@@ -44,9 +45,8 @@ public class NewsArticleExtractor {
             JSONObject articles = postArray.getJSONObject(i);
             String source = threads.getString("site");
             String content = articles.getString("text");
-            tempNewsArticle.setSource(source);
-            tempNewsArticle.setContent(content);
-            tempNewsArticle.setScore(0);
+            tempNewsArticle = new NewsArticle(source, content, SentimentAnalyser.classifySentiment(content));
+
             newsArticles.add(tempNewsArticle);
         }
     }
@@ -55,7 +55,4 @@ public class NewsArticleExtractor {
         return newsArticles;
     }
 
-    public void setNewsArticles(List<NewsArticle> newsArticles) {
-        this.newsArticles = newsArticles;
-    }
 }
