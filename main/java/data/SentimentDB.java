@@ -78,11 +78,59 @@ public class SentimentDB {
     }
 
     public void saveBaseExchangeRates(List<ForeignCurrency> foreignCurrencies) {
+        PreparedStatement statement;
+
+        String currencyInsert= "insert into FOREIGN_CURRENCY (Symbol, RandValue, LastUpdatedDate)  " +
+                "values(?,?,?);";
+
+        connect();
+
+        try {
+            statement = connection.prepareStatement(currencyInsert);
+            for(ForeignCurrency foreignCurrency: foreignCurrencies) {
+                statement.setString(1,foreignCurrency.getSymbol());
+                statement.setDouble(2, foreignCurrency.getValueInRands());
+                statement.setTimestamp(3, new Timestamp(calendar.getTimeInMillis()));
+
+                statement.executeUpdate();
+            }
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public List<ForeignCurrency> getBaseExchangeRates() {
-        return Collections.EMPTY_LIST;
+
+        ForeignCurrency tempCurrency;
+        Statement statement;
+        ResultSet resultSet;
+        List<ForeignCurrency> toReturn = new ArrayList<>();
+
+        String selectCurrencies = "select * from FOREIGN_CURRENCY where LastUpdatedDate > dateadd(day, -1, getdate());";
+        connect();
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(selectCurrencies);
+            if(resultSet.next()) {
+                do {
+                    tempCurrency = new ForeignCurrency(resultSet.getString("Symbol"), resultSet.getDouble("RandValue"));
+                    tempCurrency.setLastUpdatedDate(resultSet.getDate("LastUpdatedDate"));
+                    toReturn.add(tempCurrency);
+
+                } while (resultSet.next());
+                connection.close();
+            }
+            else {
+
+                toReturn = Collections.EMPTY_LIST;
+            }
+
+        }catch (SQLException se) {
+            se.printStackTrace();
+        }
+        return toReturn;
     }
 
     public List<Tweet> getTweets() {

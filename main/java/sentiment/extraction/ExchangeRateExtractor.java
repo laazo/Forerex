@@ -1,10 +1,13 @@
 package sentiment.extraction;
 
+import model.ForeignCurrency;
 import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by azola.ndamase on 13-Aug-16.
@@ -14,12 +17,15 @@ public class ExchangeRateExtractor {
     private double randDollar;
     private double randEuro;
     private double randPound;
+    private List<ForeignCurrency> foreignCurrencyList;
 
     public ExchangeRateExtractor() {
-        setExchangeRates();
+
     }
 
-    private void setExchangeRates() {
+    public void setExchangeRates() {
+        foreignCurrencyList = new ArrayList<>();
+
         Client client = ClientBuilder.newClient();
         String jsonResult =  client.target("http://api.fixer.io/latest?base=USD").request(MediaType.APPLICATION_JSON).get(String.class);
 
@@ -35,29 +41,15 @@ public class ExchangeRateExtractor {
         randPound = jsonObject.getJSONObject("rates").getDouble("ZAR");
 
         client.close();
+
+        foreignCurrencyList.add(new ForeignCurrency("USD", randDollar));
+        foreignCurrencyList.add(new ForeignCurrency("EUR", randEuro));
+        foreignCurrencyList.add(new ForeignCurrency("GBP", randPound));
+
     }
 
-    public double getRandDollar() {
-        return Double.parseDouble(String.format("%.2f", randDollar));
+    public List<ForeignCurrency> getBaseForeignCurrencies() {
+        return foreignCurrencyList;
     }
 
-    public void setRandDollar(double randDollar) {
-        this.randDollar = randDollar;
-    }
-
-    public double getRandEuro() {
-        return Double.parseDouble(String.format("%.2f", randEuro));
-    }
-
-    public void setRandEuro(double randEuro) {
-        this.randEuro = randEuro;
-    }
-
-    public double getRandPound() {
-        return Double.parseDouble(String.format("%.2f", randPound));
-    }
-
-    public void setRandPound(double randPound) {
-        this.randPound = randPound;
-    }
 }

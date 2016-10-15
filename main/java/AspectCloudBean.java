@@ -20,9 +20,9 @@ public class AspectCloudBean {
     public void init() {
         model = new DefaultTagCloudModel();
 
-        model.addTag(new DefaultTagCloudItem("USDZAR" + " - R" + new ExchangeRateExtractor().getRandDollar(), 3));
-        model.addTag(new DefaultTagCloudItem("EURZAR" + " - R" + new ExchangeRateExtractor().getRandEuro(), 2));
-        model.addTag(new DefaultTagCloudItem("GBPZAR" + " - R" + new ExchangeRateExtractor().getRandPound(), 1));
+        model.addTag(new DefaultTagCloudItem("USDZAR" + " - R14", 3));
+        model.addTag(new DefaultTagCloudItem("EURZAR" + " - R17", 2));
+        model.addTag(new DefaultTagCloudItem("GBPZAR" + " - R19", 1));
 
     }
 

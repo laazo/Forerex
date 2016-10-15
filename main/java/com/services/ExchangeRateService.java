@@ -1,8 +1,11 @@
 package com.services;
 
+import com.aylien.textapi.responses.Sentiment;
+import data.SentimentDB;
 import model.ForeignCurrency;
 import sentiment.extraction.ExchangeRateExtractor;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,18 +21,33 @@ import java.util.List;
 @Path("/exchangeRate")
 public class ExchangeRateService {
 
+    private SentimentDB sentimentDB;
+    private ExchangeRateExtractor exchangeRateExtractor;
+
+    @PostConstruct
+    public void init() {
+        sentimentDB = new SentimentDB();
+    }
+
     @Path("/getBaseExchangeRates")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBaseExchangeRates() {
+    public List<ForeignCurrency> getBaseExchangeRates() {
 
-        List<ForeignCurrency> tempList = Arrays.asList(new ForeignCurrency("USD", new ExchangeRateExtractor().getRandDollar()),
-                                                     new ForeignCurrency("EUR", new ExchangeRateExtractor().getRandEuro()),
-                                                    new ForeignCurrency("GBP", new ExchangeRateExtractor().getRandPound()));
-        GenericEntity<List<ForeignCurrency>> entity;
+        List<ForeignCurrency> toReturn;
 
-        entity = new GenericEntity<List<ForeignCurrency>>(tempList) {};
+        if(sentimentDB.hasRecentExchangeRates()) {
+            toReturn = sentimentDB.getBaseExchangeRates();
 
-        return Response.ok(entity).build();
+        }
+        else {
+            exchangeRateExtractor = new ExchangeRateExtractor();
+            exchangeRateExtractor.setExchangeRates();
+            toReturn = exchangeRateExtractor.getBaseForeignCurrencies();
+            sentimentDB.saveBaseExchangeRates(toReturn);
+
+        }
+
+        return toReturn;
     }
 }
