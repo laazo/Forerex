@@ -9,9 +9,9 @@ app.directive('homeIndicators', function() {
     return {
         restrict: 'A',
         controller: ['$scope', '$http', function($scope, $http){
-            this.dollar = '';
-            this.pound = '';
-            this.euro = '';
+            this.dollar = 14.07;
+            this.pound = 20.21;
+            this.euro = 18.30;
 
             var _this = this;
 

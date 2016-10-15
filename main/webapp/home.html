@@ -7,7 +7,7 @@
 
     <title>Welcome to Fore-rex</title>
 
-    <link href="resources/images/forerex.ico" rel="icon" />
+    <link href="resources/images/forerex.ico" rel="icon"/>
     <link href="resources/css/style.css" rel="stylesheet">
     <link href="resources/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet">
     <link href="resources/bootstrap-3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -16,38 +16,73 @@
 </head>
 <body class="myPage" ng-app="Forerex">
 <div id="header">
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                Fore-rex
-            </a>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    Fore-rex
+                </a>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 </div>
 
 <div class="page-header" style="border: 0 !important; margin: 0 !important;">
-    <h1><small>Dashboard</small></h1>
+    <h1>
+        <small>Dashboard</small>
+    </h1>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Sentiments Processed Today</h3>
     </div>
-    <div class="col-md-6" ng-cloak home-indicators>
+    <div class="col-lg-6" ng-cloak home-indicators>
         <h3>Indicators as of Yesterday</h3>
-        <div class="caption">
-            <span class="glyphicon glyphicon-usd">{{homeIndicators.dollar.valueInRands | number: 2}}</span><br>
-            <span class="glyphicon glyphicon-gbp">{{homeIndicators.pound.valueInRands | number: 2}}</span><br>
-            <span class="glyphicon glyphicon-euro">{{homeIndicators.euro.valueInRands | number: 2}}</span>
+
+        <div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="panel-title text-center"><span class="glyphicon glyphicon-usd"></span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{homeIndicators.dollar.valueInRands | number: 2}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="panel-title text-center"><span class="glyphicon glyphicon-gbp"></span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{homeIndicators.pound.valueInRands | number: 2}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <div class="panel-title text-center"><span class="glyphicon glyphicon-euro"></span>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{homeIndicators.euro.valueInRands | number: 2}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
+</div>
 
 
 <script type="text/javascript" src="resources/js/jquery.min.js"></script>
-<script type="text/javascript" src="resources/bootstrap-3.3.7/js/bootstrap.min.js">e</script>
+<script type="text/javascript" src="resources/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 
 </body>
 </html>
