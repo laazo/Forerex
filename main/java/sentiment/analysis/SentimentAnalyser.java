@@ -23,7 +23,7 @@ public class SentimentAnalyser {
         } catch (TextAPIException e) {
             e.printStackTrace();
         }
-        return sentiment.toString();
+        return sentiment.getPolarity();
     }
 
     public static String getSentimentValue(int sentimentScore) {

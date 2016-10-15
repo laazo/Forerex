@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Date;
+
 /**
  * Created by azola.ndamase on 04-Jun-16.
  */
@@ -9,12 +11,14 @@ public class Tweet {
     private int id;
     private String tweet;
     private String score;
+    private Date creationDate;
 
     public Tweet() {}
 
     public Tweet(String tweet, String score) {
         this.tweet = tweet;
         this.score = score;
+        setCreationDate(new Date());
     }
 
     public int getId() {
@@ -35,5 +39,13 @@ public class Tweet {
 
     public String getScore() {
         return score;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

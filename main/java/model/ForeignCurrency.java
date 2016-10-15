@@ -1,19 +1,14 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
 
 /**
  * Created by azola.ndamase on 01-Sep-16.
  */
-@Entity
+
 public class ForeignCurrency {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private int id;
 
     private String symbol;

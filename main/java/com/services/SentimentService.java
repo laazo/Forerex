@@ -1,5 +1,6 @@
 package com.services;
 
+import data.SentimentDB;
 import model.NewsArticle;
 import model.Tweet;
 import sentiment.analysis.SentimentAnalyser;
@@ -27,37 +28,48 @@ public class SentimentService {
     private List<NewsArticle> newsArticles;
     private TweetExtractor tweetExtractor;
     private NewsArticleExtractor newsArticleExtractor;
+    private SentimentDB sentimentDB;
 
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     @PostConstruct
     public void init() {
-       /* SentimentAnalyser.initialisePipeline();*/
-        createTweetSentimentModel();
-        createNewsArticlesSentimentModel();
+        sentimentDB = new SentimentDB();
     }
 
     private void createTweetSentimentModel() {
-        String topic = "The Rand";
-        tweetExtractor = new TweetExtractor();
-        tweets = new ArrayList<>();
-        tweetExtractor.retrieveTwitterSentiments(topic);
-        Tweet tempTweet;
-        for(Status tweet : tweetExtractor.getTwitterSentiments()) {
-            tempTweet = new Tweet(tweet.getText(), SentimentAnalyser.classifySentiment(tweet.getText()));
-            tweets.add(tempTweet);
+        if(sentimentDB.hasRecentTweets()) {
+            tweets = sentimentDB.getTweets();
+        }
+        else {
+            String topic = "The Rand";
+            tweetExtractor = new TweetExtractor();
+            tweets = new ArrayList<>();
+            tweetExtractor.retrieveTwitterSentiments(topic);
+            Tweet tempTweet;
+            for (Status tweet : tweetExtractor.getTwitterSentiments()) {
+                tempTweet = new Tweet(tweet.getText(), SentimentAnalyser.classifySentiment(tweet.getText()));
+                tweets.add(tempTweet);
+            }
+            sentimentDB.saveTweets(tweets);
         }
     }
 
     private void createNewsArticlesSentimentModel() {
-        newsArticles = new ArrayList<>();
-        newsArticleExtractor = new NewsArticleExtractor();
-        newsArticleExtractor.retrieveNewsArticles();
-        NewsArticle tempArticle;
+        if(sentimentDB.hasRecentNewsArticles()) {
+            newsArticles = sentimentDB.getNewsArticles();
+        }
+        else {
+            newsArticles = new ArrayList<>();
+            newsArticleExtractor = new NewsArticleExtractor();
+            newsArticleExtractor.retrieveNewsArticles();
+            NewsArticle tempArticle;
 
-        for(NewsArticle newsArticle : newsArticleExtractor.getNewsArticles()) {
-            tempArticle = new NewsArticle(newsArticle.getSource(), newsArticle.getContent(), newsArticle.getScore());
-            newsArticles.add(tempArticle);
+            for (NewsArticle newsArticle : newsArticleExtractor.getNewsArticles()) {
+                tempArticle = new NewsArticle(newsArticle.getSource(), newsArticle.getContent(), newsArticle.getScore());
+                newsArticles.add(tempArticle);
+            }
+            sentimentDB.saveNewsArticles(newsArticles);
         }
     }
 
@@ -65,6 +77,7 @@ public class SentimentService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Tweet> getTweets() {
+        createTweetSentimentModel();
         return tweets;
     }
 
@@ -72,6 +85,7 @@ public class SentimentService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<NewsArticle> getNewsArticles() {
+        createNewsArticlesSentimentModel();
         return newsArticles;
     }
 }
