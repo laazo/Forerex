@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class SentimentDB {
     private final String CONNECTION_STRING = "jdbc:jtds:sqlserver://localhost:1433/Forerex;";
-    Calendar calendar = Calendar.getInstance();
+    private Calendar calendar = Calendar.getInstance();
     private Connection connection;
 
     public void connect() {
@@ -139,7 +139,7 @@ public class SentimentDB {
         ResultSet resultSet;
         List<Tweet> toReturn = new ArrayList<>();
 
-        String selectTweets = "select * from TWEET where CreationDate > dateadd(hour, -1, getdate());";
+        String selectTweets = "select distinct Text, Score, CreationDate from TWEET where CreationDate > dateadd(hour, -1, getdate());";
         connect();
         try {
             statement = connection.createStatement();
@@ -162,6 +162,26 @@ public class SentimentDB {
             se.printStackTrace();
         }
         return toReturn;
+    }
+
+    public int getNumberOfTweetsProcessed() {
+        int numberOfTweets = 0;
+        ResultSet resultSet;
+        Statement statement;
+
+        String selectTweets = "select count(distinct Text) as numberOfTweets from TWEET where cast(CreationDate as Date) = cast(getdate() as Date);";
+        connect();
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(selectTweets);
+            resultSet.next();
+            numberOfTweets = resultSet.getInt("numberOfTweets");
+            resultSet.close();
+
+        }catch (SQLException se) {
+            se.printStackTrace();
+        }
+        return numberOfTweets;
     }
 
     public List<NewsArticle> getNewsArticles() {
@@ -195,6 +215,9 @@ public class SentimentDB {
         return toReturn;
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
     public boolean hasRecentTweets() {
         return (getTweets().size() > 0);
     }

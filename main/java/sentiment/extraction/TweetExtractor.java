@@ -47,7 +47,7 @@ public class TweetExtractor {
         query.setLocale("en");
         query.setLang("en");
         query.setGeoCode(new GeoLocation(-26.270760, 28.112268), 1000, Query.KILOMETERS);
-        query.setCount(20);
+        query.setCount(25);
     }
     /***************************************************************************************
      *    Title: Day 20: Stanford CoreNLP — Performing Sentiment Analysis of Twitter using Java

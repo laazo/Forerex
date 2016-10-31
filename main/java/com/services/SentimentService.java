@@ -15,8 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created by azola.ndamase on 10-Jul-16.
@@ -42,7 +42,7 @@ public class SentimentService {
             tweets = sentimentDB.getTweets();
         }
         else {
-            String topic = "The Rand";
+            String topic = "\"The Rand\"";
             tweetExtractor = new TweetExtractor();
             tweets = new ArrayList<>();
             tweetExtractor.retrieveTwitterSentiments(topic);
@@ -87,5 +87,28 @@ public class SentimentService {
     public List<NewsArticle> getNewsArticles() {
         createNewsArticlesSentimentModel();
         return newsArticles;
+    }
+
+    @Path("/getTopics")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> getTopics() {
+        List<String> toReturn = new ArrayList<>();
+
+        for(Tweet tweet: getTweets()) {
+            toReturn.addAll(SentimentAnalyser.getHashTags(tweet.getTweet()));
+        }
+        return toReturn;
+    }
+
+    @Path("/getNumberOfTweets")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getNumberOfTweets() {
+        int toReturn = 0;
+
+        toReturn = sentimentDB.getNumberOfTweetsProcessed();
+
+        return toReturn;
     }
 }
