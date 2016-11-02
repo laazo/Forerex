@@ -37,6 +37,7 @@ public class NewsArticleExtractor {
         JSONArray postArray = jsonObject.getJSONArray("posts");
 
         NewsArticle tempNewsArticle;
+        Polarity polarity;
         newsArticles = new ArrayList<>();
 
         for(int i = 0; i < NUMBER_OF_RESULTS; i++) {
@@ -45,7 +46,9 @@ public class NewsArticleExtractor {
             JSONObject articles = postArray.getJSONObject(i);
             String source = threads.getString("site");
             String content = articles.getString("text");
-            tempNewsArticle = new NewsArticle(source, content, SentimentAnalyser.classifySentiment(content));
+            polarity = SentimentAnalyser.classifySentiment(content, "Document");
+            tempNewsArticle = new NewsArticle(source, content, polarity.getPolarity());
+            tempNewsArticle.setPolarityValue(polarity.getPolarityValue());
 
             newsArticles.add(tempNewsArticle);
         }

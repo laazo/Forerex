@@ -13,6 +13,7 @@ public class NewsArticle {
     private String content;
     private String score;
     private Date creationDate;
+    private double polarityValue;
 
     public NewsArticle(String source, String content, String score) {
         this.source = source;
@@ -55,5 +56,13 @@ public class NewsArticle {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public double getPolarityValue() {
+        return polarityValue;
+    }
+
+    public void setPolarityValue(double polarityValue) {
+        this.polarityValue = polarityValue;
     }
 }

@@ -11,6 +11,7 @@ public class Tweet {
     private int id;
     private String tweet;
     private String score;
+    private double polarityValue;
     private Date creationDate;
 
     public Tweet() {}
@@ -47,5 +48,13 @@ public class Tweet {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public double getPolarityValue() {
+        return polarityValue;
+    }
+
+    public void setPolarityValue(double polarityValue) {
+        this.polarityValue = polarityValue;
     }
 }

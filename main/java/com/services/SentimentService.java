@@ -5,7 +5,9 @@ import model.NewsArticle;
 import model.Tweet;
 import sentiment.analysis.SentimentAnalyser;
 import sentiment.extraction.NewsArticleExtractor;
+import sentiment.extraction.Polarity;
 import sentiment.extraction.TweetExtractor;
+import sentiment.prediction.ForexPredictor;
 import twitter4j.Status;
 
 import javax.annotation.PostConstruct;
@@ -47,8 +49,11 @@ public class SentimentService {
             tweets = new ArrayList<>();
             tweetExtractor.retrieveTwitterSentiments(topic);
             Tweet tempTweet;
+            Polarity polarity;
             for (Status tweet : tweetExtractor.getTwitterSentiments()) {
-                tempTweet = new Tweet(tweet.getText(), SentimentAnalyser.classifySentiment(tweet.getText()));
+                polarity = SentimentAnalyser.classifySentiment(tweet.getText(), "Tweet");
+                tempTweet = new Tweet(tweet.getText(), polarity.getPolarity());
+                tempTweet.setPolarityValue(polarity.getPolarityValue());
                 tweets.add(tempTweet);
             }
             sentimentDB.saveTweets(tweets);
@@ -111,4 +116,32 @@ public class SentimentService {
 
         return toReturn;
     }
+
+    @Path("/getDollarPrediction")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public double getDollarPrediction(){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getNextHourDollarPrediction();
+
+    }
+
+    @Path("/getPoundPrediction")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public double getPoundPrediction(){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getNextHourPoundPrediction();
+
+    }
+
+    @Path("/getEuroPrediction")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public double getEuroPrediction(){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getNextHourEuroPrediction();
+
+    }
+
 }
