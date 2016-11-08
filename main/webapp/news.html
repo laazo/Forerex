@@ -1,0 +1,20 @@
+<div home-controller>
+    <div class="page-header" style="border: 0 !important; margin: 0 !important;">
+        <h1>
+            <small>Extracted News Articles</small>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row" style="width:99.87%; background-color: #ffffff;">
+            <div class="col-md-6 col-md-offset-3 pre-scrollable" style="height: 392px; background-color: #ffffff; margin-top: 2px;">
+                <table class="table">
+                    <tr ng-repeat="item in homeController.newsArticles">
+                        <td ng-class="{'bg-success': item.score == 'positive',
+                                        'bg-warning': item.score == 'neutral',
+                                        'bg-danger': item.score == 'negative'}"><small>{{item.content.substring(0,50) + '...'}}</small></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

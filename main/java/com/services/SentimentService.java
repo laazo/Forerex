@@ -8,17 +8,21 @@ import sentiment.extraction.NewsArticleExtractor;
 import sentiment.extraction.Polarity;
 import sentiment.extraction.TweetExtractor;
 import sentiment.prediction.ForexPredictor;
+import sentiment.prediction.HistoryEntry;
+import sentiment.prediction.PredictionEntry;
 import twitter4j.Status;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by azola.ndamase on 10-Jul-16.
@@ -98,11 +102,20 @@ public class SentimentService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getTopics() {
-        List<String> toReturn = new ArrayList<>();
+        String input="";
+        Pattern hashtagPattern = Pattern.compile("#(\\S+)");
+        Matcher matcher;
+        List<String> toReturn=new ArrayList<String>();
 
         for(Tweet tweet: getTweets()) {
-            toReturn.addAll(SentimentAnalyser.getHashTags(tweet.getTweet()));
+           input += tweet.getTweet();
         }
+
+        matcher = hashtagPattern.matcher(input);
+        while (matcher.find()) {
+            toReturn.add(matcher.group(1));
+        }
+
         return toReturn;
     }
 
@@ -143,5 +156,34 @@ public class SentimentService {
         return forexPredictor.getNextHourEuroPrediction();
 
     }
+
+    @Path("/getCurrencyPredictions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<PredictionEntry> getCurrencyPredictions(@QueryParam("id") String symbol){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getCurrencyPredictions(symbol);
+
+    }
+
+    @Path("/getActualHistory")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<HistoryEntry> getActualHistory(@QueryParam("id") String symbol){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getActualHistory(symbol);
+
+    }
+
+    @Path("/getPredictionHistory")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<HistoryEntry> getPredictionHistory(@QueryParam("id") String symbol){
+        ForexPredictor forexPredictor = new ForexPredictor();
+        return forexPredictor.getPredictionHistory(symbol);
+
+    }
+
+
 
 }

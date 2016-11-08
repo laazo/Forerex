@@ -2,13 +2,14 @@
  * Created by azola.ndamase on 30-Aug-16.
  */
 
-var app = angular.module('Forerex', []);
+var app = angular.module('Forerex', ['datatables', 'ngRoute']);
 
-app.directive('homeIndicators', function() {
+app.directive('homeController', function() {
 
     return {
         restrict: 'A',
         controller: ['$scope', '$http', function($scope, $http){
+            // default values
             this.dollar = 14.07;
             this.pound = 20.21;
             this.euro = 18.30;
@@ -33,9 +34,38 @@ app.directive('homeIndicators', function() {
                 console.log('Error occurred while getting currencies');
                 _this.currencies = [];
             });
+
+            $http.get('rest/sentiments/getNewsArticles').success(function(data){
+                _this.newsArticles = data;
+            }).error(function(data) {
+                console.log('Error occurred while getting news articles');
+            });
+
+            $http.get('rest/sentiments/getTweets').success(function(data){
+                _this.tweets = data;
+
+            }).error(function(data) {
+                console.log('Error occurred while getting tweets');
+            });
+
+            // get number of tweets processed today
+            $http.get('rest/sentiments/getNumberOfTweets').success(function(data){
+                _this.numberOfTweets = data;
+
+            }).error(function(data) {
+                console.log('Error occurred while getting tweets');
+            });
+
+            $http.get('rest/sentiments/getTopics').success(function(data){
+                _this.topics = data;
+
+            }).error(function(data) {
+                console.log('Error occurred while getting topics');
+            });
+
         }],
 
-        controllerAs: 'homeIndicators'
+        controllerAs: 'homeController'
     }
 
 });

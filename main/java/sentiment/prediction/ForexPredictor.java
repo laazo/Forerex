@@ -277,4 +277,101 @@ public class ForexPredictor {
         return toReturn;
     }
 
+    public List<PredictionEntry> getCurrencyPredictions(String symbol) {
+        List<PredictionEntry> toReturn = new ArrayList<>();
+
+        Statement statement;
+        ResultSet resultSet;
+        String selectValues = "select RandValue, datepart(hour, PredictionTime) as [Hour] from PREDICTION\n" +
+                "where Symbol = '"+symbol+"' and cast(PredictionTime as Date) = cast(getdate() as Date)";
+
+        sentimentDB = new SentimentDB();
+        sentimentDB.connect();
+
+        try {
+            statement = sentimentDB.getConnection().createStatement();
+            resultSet = statement.executeQuery(selectValues);
+            if(resultSet.next()) {
+                do {
+                    toReturn.add(new PredictionEntry((double)Math.round(resultSet.getDouble("RandValue") * 100d)/100d,
+                            resultSet.getInt("Hour")));
+
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return toReturn;
+    }
+
+    public List<HistoryEntry> getActualHistory(String symbol) {
+        List<HistoryEntry> toReturn = new ArrayList<>();
+
+        Statement statement;
+        ResultSet resultSet;
+        String selectActual = "select Symbol, max(RandValue), max(LastUpdatedDate)\n" +
+                                "from FOREIGN_CURRENCY\n" +
+                                "where datepart(month,LastUpdatedDate) = datepart(month, getdate()) and Symbol = '"+symbol+"'\n" +
+                                "group by Symbol, DATEPART(day, LastUpdatedDate);";
+
+        sentimentDB = new SentimentDB();
+        sentimentDB.connect();
+        HistoryEntry historyEntry;
+        try {
+            statement = sentimentDB.getConnection().createStatement();
+            resultSet = statement.executeQuery(selectActual);
+            if(resultSet.next()) {
+                do {
+                    historyEntry = new HistoryEntry();
+                    historyEntry.setSymbol(resultSet.getString("Symbol"));
+                    historyEntry.setActualValue(resultSet.getFloat(2));
+                    historyEntry.setDate(resultSet.getDate(3));
+                    toReturn.add(historyEntry);
+
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return toReturn;
+    }
+    public List<HistoryEntry> getPredictionHistory(String symbol) {
+        List<HistoryEntry> toReturn = new ArrayList<>();
+
+        Statement statement;
+        ResultSet resultSet;
+
+        String selectPredictions = "select Symbol, max(RandValue), max(PredictionTime) as PredictionTime\n" +
+                "from PREDICTION\n" +
+                "where Symbol = '"+symbol+"'\n" +
+                "group by Symbol, cast(PredictionTime as Date);";
+
+        sentimentDB = new SentimentDB();
+        sentimentDB.connect();
+        HistoryEntry historyEntry;
+        try {
+            statement = sentimentDB.getConnection().createStatement();
+            resultSet = statement.executeQuery(selectPredictions);
+            if(resultSet.next()) {
+                do {
+                    historyEntry = new HistoryEntry();
+                    historyEntry.setSymbol(resultSet.getString("Symbol"));
+                    historyEntry.setPredictedValue(resultSet.getFloat(2));
+                    historyEntry.setDate(resultSet.getDate(3));
+                    toReturn.add(historyEntry);
+
+                } while (resultSet.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return toReturn;
+    }
+
 }

@@ -1,0 +1,75 @@
+<div history-controller>
+    <div class="page-header" style="border: 0 !important; margin: 0 !important;">
+        <h1>
+            <small>Historical Predictions</small>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row" style="width:99.87%; background-color: #ffffff;">
+            <div class="col-md-3" style="height: 392px; background-color: #ffffff;">
+                <h4>Currencies</h4>
+                <div>&nbsp;</div>
+                <div>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <span class="btn-link" style="cursor: pointer;" ng-click="historyController.setSelectedCurrency('USD')"
+                                      ng-class="{'btn-info': historyController.selectedCurrency == 'USD'}" >
+                                USD
+                                </span>
+                            </td>
+                            <td>
+                                <span class="btn-link" style="cursor: pointer;" ng-click="historyController.setSelectedCurrency('GBP')"
+                                      ng-class="{'btn-info': historyController.selectedCurrency == 'GBP'}">
+                                GBP
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="btn-link" style="cursor: pointer;" ng-click="historyController.setSelectedCurrency('EUR')"
+                                      ng-class="{'btn-info': historyController.selectedCurrency == 'EUR'}">
+                                    EUR
+                                </span>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="button" class="btn-primary" value="View" ng-disabled="!historyController.selectedCurrency"
+                                       ng-click="historyController.getHistory(historyController.selectedCurrency);"/> </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-7" style="height: 392px; background-color: #ffffff; border-left: 2px solid #e8e8e8;">
+
+                <div style="min-width: 268px; height: 348px; margin: 0 auto;">
+                    <div class="col-md-3" style="margin-top: 2px;">
+                    <table class="table" ng-show="historyController.predictionHistory.length > 0">
+                        <thead>
+                            <th>Prediction</th>
+                        </thead>
+                        <tr ng-repeat="item in historyController.predictionHistory| orderBy: 'predictionTime' : true">
+                            <td>{{item.predictedValue | number:2}}</td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="col-md-3">
+                    <table class="table" ng-show="historyController.actualHistory.length > 0">
+                        <thead>
+                        <th>Actual</th><th>Date</th>
+                        </thead>
+                        <tr ng-repeat="item in historyController.actualHistory| orderBy: 'lastUpdatedDate' : true">
+                            <td>{{item.actualValue| number:2}}</td>
+                            <td>{{item.date}}</td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

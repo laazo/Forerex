@@ -1,0 +1,37 @@
+<div home-controller>
+    <div class="page-header" style="border: 0 !important; margin: 0 !important;">
+        <h1>
+            <small>Extracted Tweets</small>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row" style="width:99.87%; background-color: #ffffff;">
+            <div class="col-md-2" style="margin-top: 5px;">
+                <div class="bg-primary text-center" style="color: #ffffff ;">
+                    <span style="color: #ffffff; font-size: 36px; font-weight: bold;">{{homeController.tweets.length}} tweets</span>
+                </div>
+                <div class="bg-info">
+                    <small>Retrieved on: {{ homeController.tweets[0].creationDate}}</small>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-md-offset-0 table-responsive"
+                 style="height: 392px; background-color: #ffffff; margin-top: 5px;">
+                <table datatable="ng" class="table">
+                    <thead>
+                    <th>Tweets</th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in homeController.tweets">
+                        <td ng-class="{'bg-success': item.score == 'positive',
+                                        'bg-warning': item.score == 'neutral',
+                                        'bg-danger': item.score == 'negative'}">
+                            <small>{{item.tweet}}</small>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
